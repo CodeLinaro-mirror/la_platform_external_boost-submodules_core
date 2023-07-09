@@ -74,15 +74,26 @@ namespace boost_swap_impl
 
 namespace boost
 {
+namespace swap_detail
+{
   template<class T1, class T2>
   BOOST_GPU_ENABLED
-  typename enable_if_c< !boost_swap_impl::is_const<T1>::value && !boost_swap_impl::is_const<T2>::value >::type
+  typename enable_if_c< !::boost_swap_impl::is_const<T1>::value && !::boost_swap_impl::is_const<T2>::value >::type
   swap(T1& left, T2& right)
     BOOST_CORE_SWAP_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(::boost_swap_impl::swap_impl(left, right)))
   {
     ::boost_swap_impl::swap_impl(left, right);
   }
-}
+} // namespace swap_detail
+
+// We need to import the swap name with a using directive here to prevent boost::swap from being found
+// via ADL for types defined in namespace boost. This prevents infinite recursion as we use unqualified
+// call to swap in noexcept specification and implementation of swap_impl.
+// Note: Users should always refer to the swap function as boost::swap, i.e. not unqualified swap
+// or boost::swap_detail::swap. The swap_detail namespace is an implementation detail of Boost.Swap.
+using namespace swap_detail;
+
+} // namespace boost
 
 #undef BOOST_CORE_SWAP_NOEXCEPT_IF
 

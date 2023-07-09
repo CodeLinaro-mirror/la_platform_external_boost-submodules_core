@@ -16,6 +16,8 @@
   C++23) to [link core.bit `boost/core/bit.hpp`].
 * Moved the yield primitives `sp_thread_pause`, `sp_thread_yield`, `sp_thread_sleep`
   from SmartPtr implementation details to `boost/core/yield_primitives.hpp`.
+* Changed `boost::swap` definition so that it is not found by ADL when its argument
+  types are defined in namespace `boost`. ([@https://github.com/boostorg/core/issues/148 #148])
 
 [endsect]
 
